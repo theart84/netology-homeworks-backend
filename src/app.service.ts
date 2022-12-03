@@ -8,6 +8,7 @@ import { FALLBACK_COURSES, POLL, POLL_VOTES } from './data/mock';
 
 // DTO
 import { GetPollVotesDto } from './dto/get-poll-votes.dto';
+import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AppService {
@@ -16,7 +17,13 @@ export class AppService {
   private readonly fallbackCourses = FALLBACK_COURSES;
 
   private readonly poll = POLL;
+
   private readonly pollVotes = POLL_VOTES;
+
+  private readonly authCredentials = {
+    login: 'demo',
+    password: 'demo',
+  };
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -24,6 +31,20 @@ export class AppService {
     return new Promise<void>((resolve) => {
       setTimeout(() => resolve(), 5000);
     });
+  }
+
+  public async auth(body: AuthDto) {
+    const isLoginCorrect = body.login === this.authCredentials.login;
+    const isPassCorrect = body.password === this.authCredentials.password;
+    if (!isLoginCorrect || !isPassCorrect) {
+      return {
+        success: false,
+      };
+    }
+    return {
+      success: true,
+      user_id: Math.floor(Math.random() * 1000),
+    };
   }
 
   public async getCourses() {

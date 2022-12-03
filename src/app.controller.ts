@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { AuthDto } from './dto/auth.dto';
 
 // DTO
 import { GetPollVotesDto } from './dto/get-poll-votes.dto';
@@ -19,7 +20,12 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {
+  constructor(private readonly appService: AppService) {}
+
+  @Post('auth')
+  @UseInterceptors(FileInterceptor(''))
+  public auth(@Body() body: AuthDto) {
+    return this.appService.auth(body);
   }
 
   @Get('slow-get-courses')
