@@ -1,4 +1,6 @@
+// Core
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -8,15 +10,31 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+
+// DTO
+import { GetPollVotesDto } from './dto/get-poll-votes.dto';
+
+// Services
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) {
+  }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('slow-get-courses')
+  public getCourses() {
+    return this.appService.getCourses();
+  }
+
+  @Get('poll')
+  public getPoll() {
+    return this.appService.getPoll();
+  }
+
+  @Post('poll')
+  public getPollVotes(@Body() body: GetPollVotesDto) {
+    return this.appService.getPollVotes(body);
   }
 
   @Post('upload')
