@@ -33,7 +33,10 @@ export class AppService {
         ),
       );
       await this.sleep();
-      return result;
+      return {
+        date: result.Date,
+        response: result
+      }
     } catch (error) {
       this.logger.error(`Fetch failed: ${error?.message}`);
       throw new BadRequestException('Service unavailable :-(');
