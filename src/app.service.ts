@@ -4,7 +4,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom, map, tap } from 'rxjs';
 
 // Data
-import { POLL, POLL_VOTES } from './data/mock';
+import { FALLBACK_COURSES, POLL, POLL_VOTES } from './data/mock';
 
 // DTO
 import { GetPollVotesDto } from './dto/get-poll-votes.dto';
@@ -12,6 +12,8 @@ import { GetPollVotesDto } from './dto/get-poll-votes.dto';
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
+
+  private readonly fallbackCourses = FALLBACK_COURSES;
 
   private readonly poll = POLL;
   private readonly pollVotes = POLL_VOTES;
@@ -35,11 +37,12 @@ export class AppService {
       await this.sleep();
       return {
         date: result.Date,
-        response: result
-      }
+        response: result,
+      };
     } catch (error) {
       this.logger.error(`Fetch failed: ${error?.message}`);
-      throw new BadRequestException('Service unavailable :-(');
+      await this.sleep();
+      return this.fallbackCourses;
     }
   }
 
